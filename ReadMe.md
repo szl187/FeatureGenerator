@@ -15,9 +15,9 @@
 
 WinPcap安装包获取路径：https://www.winpcap.org/install/default.htm
 
-<mark style="background-color：colorName/hexOfColor">二、Windows环境</mark>
+**二、Windows环境
 
-使用io.h库及time.h库，需要在windows环境下运行
+使用io.h库及time.h库，需要在windows环境下运行**
 
 # 目录结构描述
 
@@ -43,32 +43,28 @@ WinPcap安装包获取路径：https://www.winpcap.org/install/default.htm
 
     .pcap或.pcapng格式文件
 
-~~输入文件内容：~~ 
+~~输入文件内容~~ 
 
-    ~~参数一：文件相对路径~~
+   ~~参数一：文件相对路径~~
 
-    ~~参数二：特征标签~~
+   ~~参数二：特征标签~~
 
-
-<mark style="background-color：colorName/hexOfColor">输入示例：</mark>
-
-
-    ~~./FeatureGenerator.exe /moa_tx/moa_1_ppt.pcapng 480p~~
-
-    ~~可执行文件名              输入文件相对路径              特征标签~~
     
      可执行程序名 输入类型参数 绝对路径 可选参数 参数值 
      
-     | 输入类型参数 | 说明 | 备注 |
-     | -file | pcap或pcapng文件的绝对路径 | |
-     | -folder | 文件夹绝对路径 | 不读取子文件夹。且文件数<2时无法读取 |
-     
-     | 可选参数 | 参数值 | 说明 | 备注 |
-     | -autocl | 无 | 依模型进行流量分类 | 未实现 |
-     | -cl | 分类标签 | 人工打流量分类标签 | 未实现 |
-     | -autoel | 无 | 依模型进行QoE预测 | 未实现 |
-     | -el | QoE标签 | 人工打QoE标签 | OK |
-     | -rawdata | 无 | 产生额外输出文件记录数据包原始信息 | OK |
+
+| 输入类型参数 | 说明 | 备注 |
+| --- | --- | --- |
+|  -file | pcap或pcapng文件的绝对路径 |  |
+| -folder  | 文件夹绝对路径 | 不读取子文件夹，文件数<2时无法读取 |
+
+| 可选参数 | 参数值 | 说明 | 备注 |
+|----|----|----|----|
+| -autocl | 无 | 依模型进行流量分类 | 未实现 |
+| -cl | 分类标签 | 人工打流量分类标签 | 未实现 |
+| -autoel | 无 | 依模型进行QoE预测 | 未实现 |
+| -el | QoE标签 | 人工打QoE标签 | OK |
+| -rawdata | 无 | 产生额外输出文件记录数据包原始信息 | OK |
 	
     
     
@@ -76,10 +72,9 @@ WinPcap安装包获取路径：https://www.winpcap.org/install/default.htm
 输出文件格式：
 
     utf-8编码无表头csv文件
-
-<mark style="background-color：colorName/hexOfColor">输出文件名：</mark>
-
-   ~~ 输入文件名+res.csv~~
-   输出1： 输入文件名+QoEFeat.csv
-   输出2： 输入文件名+QoSFeat.csv （未实现）
-   输出3： 输入文件名+RawData.csv
+~~输入文件名+res.csv~~
+    输出1： 输入文件名+QoEFeat.csv
+   
+    输出2： 输入文件名+QoSFeat.csv （未实现）
+   
+    输出3： 输入文件名+RawData.csv
