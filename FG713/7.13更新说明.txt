@@ -1,4 +1,0 @@
-main.cpp  规范书写、注释、缩进；参数化输入；新增文件夹读取模式； 使用io.h库函数组合取代getcwd，需要在windows系统运行。
-flow.h 新增外部变量引用
-flow.cpp  规范书写、缩进
-ReadMe.md 根据代码功能进行调整
