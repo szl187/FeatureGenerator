@@ -12,7 +12,7 @@ pandas
 
 **2.源码**
 
-[getscore.py](https://github.com/szl187/FeatureGenerator/tools)
+[getscore.py](https://github.com/szl187/FeatureGenerator/blob/main/tools/getscore.py)
 
 # 使用说明
 
