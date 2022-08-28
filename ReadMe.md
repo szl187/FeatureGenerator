@@ -1,7 +1,11 @@
 # 项目介绍
-本项目用于从pcap或pcapng文件中提取流量特征信息。
-# 环境依赖
-一、WinPcap环境
+FeatureGenerator是一种特征工程工具，用于解决网络服务QoE评价及业务分类问题。详细说明见[FeatureGenerator论文](www.baidu.com)
+# 支持协议
+IPv4
+TCP UDP
+RTP RTCP
+# 安装
+1.环境依赖
 
 包含目录：$(WinPcapHome)\Include;
 
@@ -11,34 +15,14 @@
 
 链接器命令行其他选项：wpcap.lib ws2_32.lib
 
-WinPcap安装包获取路径：https://www.winpcap.org/install/default.htm
+WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default.htm)
 
-
-# 目录结构描述
-
-├── readme.md // 帮助文档
-
-├── 程序说明.doc //代码介绍
-
-├── flow.h 
-
-├── flow.cpp
-
-├── flow_process.h
-
-├── flow_process.cpp
-
-├── main.cpp
-
-├── …… //视频流量文件夹
+2.安装
+[FeatureGenerator源码](https://github.com/szl187/FeatureGenerator)
 
 # 使用说明
-
-
-
-程序使用方法：
-
-可执行程序名 输入类型参数 绝对路径 可选参数 参数值 
+1.输入参数说明
+输入格式：可执行程序名 输入类型参数 绝对路径 可选参数 参数值 
      
 输入类型参数说明：
 | 输入类型参数 | 说明 | 备注 |
@@ -50,18 +34,22 @@ WinPcap安装包获取路径：https://www.winpcap.org/install/default.htm
 | 可选参数 | 参数值 | 说明 | 备注 |
 |----|----|----|----|
 | -csv | 无 | 输出csv版本 | 默认为txt输出 |
-| -v | 数字 | 输出每个流前v个数据包的长度 | txt版本输出有效 |
+| -v | 数字 | 输出每个流前v个数据包的长度 |  |
 | -rawdata | 无 | 输出每个包的时间戳及四元组 |  |
 | -i | 数字 | 以i秒为单位截取流量并计算特征 |  |
+| -thpmin | 数字 | 输出每秒包数大于参数值的流特征 | 默认为1 |
+| -nortcp | 无 | 不输出rtcp流信息 |  |
 	
-    
-    
+2.示例
+读取文件并默认输出易读的txt特征文件
+./featuregenerator -file home/pcap/text.pcap
+读取文件夹中所有pcap或pcapng文件并输出csv特征文件
+./featuregenerator -folder home/pcap -csv
+读取文件并输出每个数据包的信息摘要
+./featuregenerator -file home/pcap/text.pcap -rawdata
+以20秒为单位提取特征（默认为10秒）
+./featuregenerator -file home/pcap/text.pcap -i 20
+读取文件并输出每秒包数大于10的非rtcp流信息
+./featuregenerator -file home/pcap/text.pcap -nortcp -thpmin 10
 
-输出文件格式：
 
-    输出1： 输入文件名+QoEFeat.txt
-   
-    输出2： 输入文件名+RawData.csv
-
-test：
-    [test](https://szl187.github.io/FeatureGenerator/test.html)
