@@ -79,4 +79,4 @@ WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default
 
 
 # 关联工具
-1.流量MoS打分工具 [getscore](https://szl187.github.io/FeatureGenerator/doc/getScore.md)
+1.流量MoS打分工具 [getscore](https://github.com/szl187/FeatureGenerator/blob/main/doc/getScore.md)
