@@ -1,10 +1,13 @@
 # 项目介绍
+
 FeatureGenerator是一种特征工程工具，用于解决网络服务QoE评价及业务分类问题。详细说明见[FeatureGenerator论文](www.baidu.com)
 # 支持协议
+
 IPv4
 TCP UDP
 RTP RTCP
 # 安装
+
 1.环境依赖
 
 包含目录：$(WinPcapHome)\Include;
@@ -21,7 +24,9 @@ WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default
 [FeatureGenerator源码](https://github.com/szl187/FeatureGenerator)
 
 # 使用说明
+
 1.输入参数说明
+
 输入格式：可执行程序名 输入类型参数 绝对路径 可选参数 参数值 
      
 输入类型参数说明：
@@ -41,15 +46,26 @@ WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default
 | -nortcp | 无 | 不输出rtcp流信息 |  |
 	
 2.示例
+
 读取文件并默认输出易读的txt特征文件
+
 ./featuregenerator -file home/pcap/text.pcap
+
 读取文件夹中所有pcap或pcapng文件并输出csv特征文件
+
 ./featuregenerator -folder home/pcap -csv
+
 读取文件并输出每个数据包的信息摘要
+
 ./featuregenerator -file home/pcap/text.pcap -rawdata
+
 以20秒为单位提取特征（默认为10秒）
+
 ./featuregenerator -file home/pcap/text.pcap -i 20
+
 读取文件并输出每秒包数大于10的非rtcp流信息
+
 ./featuregenerator -file home/pcap/text.pcap -nortcp -thpmin 10
+
 
 
