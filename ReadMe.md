@@ -10,20 +10,47 @@ TCP UDP
 RTP RTCP
 # 安装
 
-**1.环境依赖**
+**1.Debain**
 
-包含目录：$(WinPcapHome)\Include;
+安装GCC： sudo apt-get install build-essential
 
-库目录：$(WinPcapHome)\Lib;
+安装flex： sudo apt-get install flex
 
-预处理器：WPCAP;
+安装bison： sudo apt-get install bison
 
-链接器命令行其他选项：wpcap.lib ws2_32.lib
+安装libpcap版本 > 1.9.1：
 
-WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default.htm)
+[libpcap](https://www.tcpdump.org/release)
 
-**2.安装**
-[FeatureGenerator源码](https://github.com/szl187/FeatureGenerator)
+tar -zxvf libpcap-*
+
+sudo ./configure
+
+sudo make
+
+sudo make install
+
+
+**2.Cent OS**
+
+安装GCC： yum -y install build-essential
+
+安装flex： yum -y install flex
+
+安装bison：yum -y installl bison
+
+安装libpcap版本 > 1.9.1：
+
+[libpcap](https://www.tcpdump.org/release)
+
+tar -zxvf libpcap-*
+
+sudo ./configure
+
+sudo make
+
+sudo make install
+
 
 # 使用说明
 
