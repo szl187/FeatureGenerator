@@ -1,7 +1,6 @@
 #pragma once
 #include<pcap.h>
 #include<vector>
-//#include <unordered_map>
 #include<cmath>
 #include<string>
 #include<fstream>
@@ -11,10 +10,6 @@
 #include<map>
 #include <string.h>
 #include<set>
-//#include "DTree.hpp"
-//#include "CDTree.hpp"
-//#include "RFCSV.hpp"
-//#include "time.h"
 #define EXPIRED_UPDATE 40
 #define SEGMENT_WINDOWS_SIZE 3
 //定义连续的时间范围内
@@ -30,8 +25,8 @@ typedef double time_type;
 
 extern std::string label;
 extern std::ofstream out1, out2, out3, out4,out5;
-extern int raw, seg_decay, lite, segout, j, block, v, csv, allowweakflow,allflow, time_i,rtinfo,lenmin,cntmin;
-extern double thpmin;
+extern int raw, seg_decay, lite, segout, j, block, v, csv, allowweakflow,allflow, rtinfo, lenmin,cntmin,lenmax,decay;
+extern double thpmin, time_i,duramin;
 //extern  CDTree myCDTree;
 enum FlowDirection
 {
@@ -173,10 +168,8 @@ struct flow_key
 	struct in_addr  ip_source_address; /*源IP*/
 	struct in_addr  ip_destination_address; /*目的IP*/
 	u_int16_t tcp_source_port;		  //源端口号
-
 	u_int16_t tcp_destination_port;	//目的端口号
 
-	//FlowDirection flow_direction;
 
 	std::string to_string()const;
 	bool operator < (const struct flow_key& e) const;
@@ -188,25 +181,17 @@ struct simple_packet_info
 {
 	struct flow_key flow_key;
 	time_type ts;	/* time stamp */
-	struct timeval ts1;
 	bpf_u_int32 packet_len;	/* length of this packet (off wire) */
-	//FlowDirection flow_direction;
 	int header_len;//2,3,4 header_len
 	int protocol;
 
 	struct ip_header* ip_protocol;
 	struct tcp_header* tcp_protocol;
 	struct udp_header* udp_protocol;
-	//struct rtcp_header* rtcp_header;
 };
 
-struct segment_info
-{
-	packet_count_type seg_pkt_num, seg_byte_cnt;
-	time_type seg_req;//下个段段请求的时间戳，即当前上行包的时间戳
-	time_type start_time, end_time;//该段第一个和最后一个下行包的时间戳
-	time_type seg_dur, req_int;
-};
+
+
 
 struct flow_feature
 {
@@ -227,9 +212,15 @@ struct flow_feature
 	double rttdiff = -100;
 	char pkt_size_vec[128];
 	int valid = 0;
+	bool same_len;
+	
+
 	bool operator<(const struct flow_feature &other)const {
 		return thp < other.thp;
 	}
+	float score;
+
+	std::vector<double> histroyBW;
 
 };
 
@@ -241,16 +232,20 @@ class flow
 public:
 
 	flow(struct simple_packet_info &simple_packet_info);
+	flow(struct simple_packet_info &simple_packet_info, struct flow_feature last_ff, double d);
 	struct flow_key flow_key;
 	struct flow_feature  ff;
 	int protocol;
 
 	time_type latest_timestamp, interarrival_time_n, interarrival_time_ls, flow_duration, start_timestamp, used_ts;
 	packet_count_type pkt_count,rtt_count, window_size_ls, retrans, ack_no_payload;
-	long long int packet_size_ls, app_packet_size_ls;
+	long long int packet_size_ls, app_packet_size_ls,header_len_ls;
 	double bandwith, appbandwith ,throughput;
-	double ave_pkt_size, app_ave_pkt_size,ave_interval, ave_windows, ave_rtt, rtt_min, rtt_max, interval_ls, rtt_ls, pkt_size_ls_right_10;
+	double ave_pkt_size, app_ave_pkt_size,ave_interval, ave_windows, ave_rtt, rtt_min, rtt_max, interval_ls, rtt_ls;
+
 	std::map<u_int32_t, time_type> seq;
+
+
 	u_int32_t max_seq;
 	std::string packet_size_vector;
 	time_type reverse_latest_timestamp;
@@ -258,7 +253,11 @@ public:
 	void feature_output(simple_packet_info &pkt, int protocol);
 	void add_packet(simple_packet_info &pkt);
 	void count_rtt(time_type ack_ts, u_int32_t ack);
-	void terminate(int overtime=0);//输出流特征并释放空间（未完成）
+	void terminate();//输出流特征并释放空间
+	float count_score(double pktlen, double itvl);
+	double d;
+
+	
 
 	
 	/*
