@@ -98,9 +98,10 @@ flow_process::~flow_process() {
 			if ((*i).avelen1000up >= 1180) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 			else  std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
 
-
-			if ((*(i + 1)).avelen1000up >= 1180) std::cout << (*(i + 1)).ipsrc << "->" << (*(i + 1)).ipdst << "  " << (*(i + 1)).portsrc << "->" << (*(i + 1)).portdst << "  share\n";
-			else  std::cout << (*(i + 1)).ipsrc << "->" << (*(i + 1)).ipdst << "  " << (*(i + 1)).portsrc << "->" << (*(i + 1)).portdst << "  video\n";
+			auto j = i + 1;
+			while ((*j).avelen1000up < 1000 || (*j).avelen1000up > 2000) j++;
+			if ((*(j)).avelen1000up >= 1180) std::cout << (*(j)).ipsrc << "->" << (*(j)).ipdst << "  " << (*(j)).portsrc << "->" << (*(j)).portdst << "  share\n";
+			else  std::cout << (*(j)).ipsrc << "->" << (*(j)).ipdst << "  " << (*(j)).portsrc << "->" << (*(j)).portdst << "  video\n";
 			//else std::cout << (*(i + 1)).ipsrc << "->" << (*(i + 1)).ipdst << "  " << (*(i + 1)).portsrc << "->" << (*(i + 1)).portdst << "有情况没考虑到1.2\n";
 
 		}
