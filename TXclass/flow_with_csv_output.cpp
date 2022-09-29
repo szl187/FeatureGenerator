@@ -122,7 +122,7 @@ void flow::terminate()
 	
 	
 	
-	if (1) {
+	if (throughput>9){
 		
 			
 			ff.valid = 1;
