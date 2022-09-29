@@ -59,7 +59,7 @@ flow_process::~flow_process() {
 		
 		for (it = flows.begin(); it != flows.end(); ++it) {
 			it->second.terminate();
-			flow_features.push_back((*it).second.ff);
+			if ((*it).second.ff.valid==1) flow_features.push_back((*it).second.ff);
 		}
 		
 
@@ -70,27 +70,44 @@ flow_process::~flow_process() {
 		
 
 		//CSV输出或TXT输出
+		
 		int cnt = 0;
+		auto i = flow_features.begin();
+		while (i < flow_features.end()) {
+			if ((*i).avelen1000up == 0) i++;
+			else break;
+		}
+		if (i != flow_features.end() && (*i).valid==1) std::cout << (*i).portsrc << "->" << (*i).portdst << " len1000:" << (*i).avelen1000up << " thp:" << (*i).thp << "valid: " << (*i).valid << std::endl;
+
 		for (auto i = flow_features.begin(); i != flow_features.end(); i++) {
-			if (i <= flow_features.begin() + 1 && i != flow_features.end() && (*i).avelen1000up > 1000 && (*i).avelen1000up < 2000) {
-				cnt++;
-				//std::cout << (*i).portsrc << "->" << (*i).portdst << " len:" << (*i).avelen1000up << " bw:" << (*i).bw << " thp:" << (*i).thp << std::endl;
-			}
+			//if ((*i).valid) {
+				//std::cout << (*i).portsrc << "->" << (*i).portdst << " len1000:" << (*i).avelen1000up << " thp:" << (*i).thp << "valid: " << (*i).valid << std::endl;
+				if (cnt < 2 && i != flow_features.end() && (*i).avelen1000up > 1000 && (*i).avelen1000up < 2000) {
+					cnt++;
+				}
+			//}
+			
 		}
 		//out1 << (*i).portsrc << "," << (*i).portdst << "," << (*i).pktlen << "," << (*i).bw << "," << (*i).thp << "," << (*i).cnt26 << "," << (*i).cnt60 << "," << (*i).cnt74 << "," << (*i).cnt54 << "," << (*i).cnt78 << "," << (*i).cnt82 << std::endl;
 
 					//if ((*i).thp > 9) {
 		if (cnt == 1) {
 			auto i = flow_features.begin();
-			while ((*i).avelen1000up < 1000 || (*i).avelen1000up > 2000) i++;
-			if ((*i).avelen1000up >= 1180) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
-			else  std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
-			//else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "有情况没考虑到0\n";
+			while (((*i).avelen1000up < 1000 || (*i).avelen1000up > 2000) && i!=flow_features.end() ) i++;
+			if (i == flow_features.end()) {
+				std::cout << "error1:cnt=1 but no payload get\n";
+				
+			}
+			else if((*i).valid) {
+				if ((*i).avelen1000up >= 1180) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
+				else  std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+				//else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "有情况没考虑到0\n";
 
-			if((*i).udpnopayloadrate>0) 
-				std::cout << (*i).ipdst << "->" << (*i).ipsrc << "  " << (*i).portdst << "->" << (*i).portsrc << "  voice\n";
-			else 
-				std::cout << (*i).ipdst << "->" << (*i).ipsrc << "  " << (*i).portdst << "->" << (*i).portsrc << "  none\n";
+				if ((*i).udpnopayloadrate > 0)
+					std::cout << (*i).ipdst << "->" << (*i).ipsrc << "  " << (*i).portdst << "->" << (*i).portsrc << "  voice\n";
+				else
+					std::cout << (*i).ipdst << "->" << (*i).ipsrc << "  " << (*i).portdst << "->" << (*i).portsrc << "  none\n";
+			}
 		}
 		else if (cnt == 2) {
 			auto i = flow_features.begin();
@@ -106,6 +123,11 @@ flow_process::~flow_process() {
 
 		}
 		else {
+			std::cout << "no flow has packet len >1000\n";
+			auto i = flow_features.begin();
+			std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+			std::cout << (*i).ipdst << "->" << (*i).ipsrc << "  " << (*i).portdst << "->" << (*i).portsrc << "  none\n";
+			/*
 			auto i = flow_features.begin();
 			while (((*i).portsrc <= 8000 || (*i).portdst <= 8000) && i<flow_features.end()) i++;
 
@@ -141,6 +163,7 @@ flow_process::~flow_process() {
 				std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  none\n";
 				std::cout << (*j).ipsrc << "->" << (*j).ipdst << "  " << (*j).portsrc << "->" << (*j).portdst << "  none\n";
 			}
+			*/
 		}
 		
 		

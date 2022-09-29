@@ -122,7 +122,7 @@ void flow::terminate()
 	
 	
 	
-	if (duration!=0 && pkt_count>10) {
+	if (1) {
 		
 			
 			ff.valid = 1;
@@ -172,8 +172,10 @@ void flow::feature_output(simple_packet_info &pkt, int protocol)
 
 	pkt_count++;
 	//如果是无载荷包，则不统计特征
+	/*
 	if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 0) { udpnopayload_cnt++; return; }
 	
+
 	if (pkt.packet_len <= 200) {
 		if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 74) cnt74++;
 		if (pkt.packet_len-pkt.header_len==60) { cnt60++; }
@@ -185,7 +187,7 @@ void flow::feature_output(simple_packet_info &pkt, int protocol)
 
 		return;
 	}
-
+	*/
 	//包数+1
 	
 	
