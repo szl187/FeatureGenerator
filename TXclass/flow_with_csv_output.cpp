@@ -122,7 +122,7 @@ void flow::terminate()
 	
 	
 	
-	if (duration!=0 && ave_pkt_size>100 && pkt_count>10) {
+	if (duration!=0 && pkt_count>10) {
 		
 			
 			ff.valid = 1;
