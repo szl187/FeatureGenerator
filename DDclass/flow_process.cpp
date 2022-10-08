@@ -93,23 +93,23 @@ flow_process::~flow_process() {
 					short port1 = (*i).portsrc, port2 = (*i).portdst;
 					if(((*i).portsrc<5000 && (*i).portdst <60000) || ((*i).portdst < 5000 && (*i).portsrc < 60000)) {//video port
 						if (cntsingle == 1) {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video1\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
 							cntvideo++;
 						}
 						else {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share1\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 							cntshare++;
 						}
 
 					}
 					else if (((*i).portsrc < 5000 && (*i).portdst > 60000) || ((*i).portdst < 5000 && (*i).portsrc > 60000)) {
 						if (cntsingle == 1) {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share2\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 							cntshare++;
 						}
 						else {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video2\n";
-							cntvideo++;
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
+							cntshare++;
 						}
 					}
 					/*
@@ -141,23 +141,23 @@ flow_process::~flow_process() {
 					short port1 = (*i).portsrc, port2 = (*i).portdst;
 					if (((*i).portsrc < 5000 && (*i).portdst > 60000) || ((*i).portdst < 5000 && (*i).portsrc > 60000)) {//找到了video的反向流，说明是video混淆的
 						if (cntsingle == 1) {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share3\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 							cntshare++;
 						}
 						else {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video3\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
 							cntvideo++;
 						}
 
 					}
 					else if (((*i).portsrc < 5000 && (*i).portdst < 60000) || ((*i).portdst < 5000 && (*i).portsrc < 60000)) {//没找到也正常，可能没录入反向流
 						if (cntsingle == 1) {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video4\n";
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
 							cntvideo++;
 						}
 						else {
-							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share4\n";
-							cntshare++;
+							std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+							cntvideo++;
 						}
 					}
 					/*
@@ -205,10 +205,10 @@ flow_process::~flow_process() {
 				for (auto i = flow_features.begin(); i != flow_features.end() && i < flow_features.begin() + 4; i++) {
 					//std::cout << (*i).portsrc << "->" << (*i).portdst << " len1000:" << (*i).avelen1000up << " len:" << (*i).pktlen << " thp:" << (*i).thp << "valid: " << (*i).valid << std::endl;
 					if ((*i).pktlen > 122 && (*i).pktlen < 125 && (*i).portdst > 50000) {
-						std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video*\n";
+						std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
 					}
 					if ((*i).pktlen > 129 && (*i).pktlen < 133 && (*i).portdst > 60000) {
-						std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share*\n";
+						std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 					}
 				}
 			}
