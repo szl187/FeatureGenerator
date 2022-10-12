@@ -216,7 +216,7 @@ struct flow_feature
 	
 
 	bool operator<(const struct flow_feature &other)const {
-		return pktlen < other.pktlen;
+		return thp < other.thp;
 	}
 	float score;
 

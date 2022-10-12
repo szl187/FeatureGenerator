@@ -75,8 +75,8 @@ flow_process::~flow_process() {
 		for (auto i = flow_features.begin(); i != flow_features.end(); i++) {
 			if ((*i).avelen1000up > 1000) cnt1000++;
 		}
-		
-		for (auto i = flow_features.begin(); i != flow_features.end() ; i++) {
+		int cntshare = 0, cntvideo = 0;
+		for (auto i = flow_features.begin(); i != flow_features.end() && i < flow_features.begin()+4; i++) {
 			//std::cout << (*i).portsrc << "->" << (*i).portdst << " len1000:" << (*i).avelen1000up << " len:" << (*i).pktlen << " thp:" << (*i).thp << std::endl;
 			if ((*i).avelen1000up > 1000 && (*i).pktlen > 750) { 
 				if (cnt1000 == 2) {
@@ -89,6 +89,7 @@ flow_process::~flow_process() {
 
 							if ((*j).pktlen<80 && (*j).pktlen>76) {//找到了share的反向流
 								std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
+								cntshare++;
 							}
 							else if ((*j).avelen1000up > 1000 && (*j).pktlen < 750) {
 								//!!视频反向有负载，但负载很低，可能是音频。
@@ -96,12 +97,12 @@ flow_process::~flow_process() {
 								std::cout << (*j).ipsrc << "->" << (*j).ipdst << "  " << (*j).portsrc << "->" << (*j).portdst << "  voice\n";
 								return;
 							}
-							else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+							else { std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n"; cntvideo++; }
 						}
 					}
 					
 				}
-				else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+				else { std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n"; cntvideo++; }
 			}
 			if ((*i).pktlen < 750 && (*i).avelen1000up > 1000) {
 				if (cnt1000 == 2) {
@@ -114,15 +115,35 @@ flow_process::~flow_process() {
 
 							if ((*j).pktlen>110) {//找到了video的反向流
 								std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+								cntvideo++;
 							}
-							else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
+							else { 
+								std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n"; cntshare++;
+							}
 						}
 					}
 				}
-				else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
+				else { std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n"; cntshare++; }
 			}
-			if((*i).avelen1000up < 1000 && (*i).pktlen<300 &&(*i).pktlen>200) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+			//if((*i).avelen1000up < 1000 && (*i).pktlen<300 &&(*i).pktlen>200) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
 
+		}
+		for (auto i = flow_features.begin(); i != flow_features.end() && i < flow_features.begin() + 2; i++) {
+			if ((*i).avelen1000up < 1000 && (*i).pktlen < 300 && (*i).pktlen>200) {
+				if (cntshare == 1) {
+					auto j = flow_features.begin();
+
+					for (; j != flow_features.end(); j++) {
+						if ((*j).portsrc == (*i).portdst && (*j).portdst == (*i).portsrc) {
+							if ((*j).pktlen < 118 && (*j).pktlen>115)//voice的反向
+								std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+						}
+					}
+				}
+				else if(cntshare==0 && cntvideo==0) //可能是单向或者双向voice，不判反向
+					std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+				else std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+			}
 		}
 			
 				
