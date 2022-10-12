@@ -120,11 +120,14 @@ void getPacket(u_char * arg, const struct pcap_pkthdr * pkthdr, const u_char * p
 	
 }
 /*用于共享的全局变量*/
+/* 10.12
 char * file = (char *)malloc(80);
 char * outputfile1name = (char *)malloc(80);
 char * outputfile3name = (char *)malloc(80);
 char * outputfile4name = (char *)malloc(80);
 char * outputfile5name = (char *)malloc(80);
+*/
+string output1, output3, output5;
 string label="",labelClass="";
 std::ofstream out1, out2, out3,out4,out5;
 
@@ -139,7 +142,7 @@ int main(int argc, char* argv[])
 	string realPath;
 	vector<string> files;
 	
-	outputfile1name = (char *)malloc(80);
+	
 	if (strcmp(argv[1] , "-folder")==0){
 		realPath = argv[2];
 		getAllFiles(realPath,files);
@@ -245,32 +248,33 @@ int main(int argc, char* argv[])
 		
 		//一次读取候选文件并分别进行处理
 		
-		strcpy(outputfile1name,files[i].c_str());
+		//10.12
+		output1 = files[i];
+		output3 = files[i];
+		output5 = files[i];
 		
-		strcpy(outputfile3name, files[i].c_str());
-		strcpy(outputfile5name, files[i].c_str());
-		//strcpy(outputfile4name, files[i].c_str());
-		if (onlyallflow == 0) {
-			if (csv == 0) strcat(outputfile1name, ".txt");
-			else  strcat(outputfile1name, ".csv");
-			out1.open(outputfile1name);
-			if (csv == 1) {
-				out1 << "ipsrc,ipdst,portsrc,portdst,startts,endts,pktcnt,pktlen,applen,itvl,bw,appbw,thp,retran, rtrate,npack,rtt,rttM,rttm,rttdif,";//len1,len2,len3,len4,len5,len6,len7,len8,len9,len10,
+		
+		
+		if (csv == 0) output1+= ".txt";
+		else output1 += ".csv";
+		out1.open(output1);
+		if (csv == 1) {
+			out1 << "ipsrc,ipdst,portsrc,portdst,startts,endts,pktcnt,pktlen,applen,itvl,bw,appbw,thp,retran, rtrate,npack,rtt,rttM,rttm,rttdif,";//len1,len2,len3,len4,len5,len6,len7,len8,len9,len10,
 				/*
 				for (int i = 1; i <= v; i++)
 				{
 					out1 << "len" << i << ',';
 				}
 				*/
-				out1 << endl;
-			}
-			cout << "output:" << outputfile1name << endl;
+			out1 << endl;
 		}
+		cout << "output:" << output1 << endl;
+		
 
-		strcat(outputfile3name, "RawData.csv");
+		output3 += "rawdata.csv";
 	
 	
-		if (raw==1) out3.open(outputfile3name);
+		if (raw==1) out3.open(output3);
 
 		
 
@@ -286,7 +290,7 @@ int main(int argc, char* argv[])
 		
 		delete flow_p;
 		flow_p = new flow_process();
-		if (onlyallflow == 0) out1.close();
+		out1.close();
 		//out2.close();
 		if (raw == 1) out3.close();
 

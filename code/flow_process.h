@@ -5,7 +5,7 @@
 #include<algorithm>
 extern int j;
 extern double time_i;
-
+extern std::ofstream out1;
 
 class flow_process
 {	
