@@ -63,59 +63,47 @@ void getPacket(u_char * arg, const struct pcap_pkthdr * pkthdr, const u_char * p
 	}
 	flow_p->simple_packet_info->ts1 = pkthdr->ts;
 	flow_p->simple_packet_info->packet_len = pkthdr->len;
-	//if (onlyallflow == 0) {//若不仅需要全流信息
-		//获取二层首部
 	struct ethernet_header* ethernet_protocol;
 	ethernet_protocol = (struct ethernet_header*)packet;
 	u_short ethernet_type;
 	ethernet_type = ntohs(ethernet_protocol->ether_type);
 
-	if (ethernet_type == 0x0800) {
-		//上层为IPv4，则获取IP首部
-		struct ip_header* ip_protocol;
-		ip_protocol = (struct ip_header*)(packet + 14);
-		ip_header_len = (ntohs(ip_protocol->ip_header_length) >> 8) * 4;
-		//cout << ip_header_len<<"\n";
-		flow_p->simple_packet_info->ip_protocol = ip_protocol;
-		flow_p->simple_packet_info->flow_key.ip_source_address = ip_protocol->ip_source_address;
-		flow_p->simple_packet_info->flow_key.ip_destination_address = ip_protocol->ip_destination_address;
-		string ipsour = inet_ntoa(ip_protocol->ip_source_address);
-		string ipdest = inet_ntoa(ip_protocol->ip_destination_address);
-		if (raw == 1) {
-			out3 << ipsour << ',';
-			out3 << ipdest << ',';
-		}
-		//printf("%d\n", ntohs(ip_protocol->ip_length));
+	
+	//上层为IPv4，则获取IP首部
+	struct ip_header* ip_protocol;
+	ip_protocol = (struct ip_header*)(packet + 14);
+	ip_header_len = (ntohs(ip_protocol->ip_header_length) >> 8) * 4;
+	//cout << ip_header_len<<"\n";
+	flow_p->simple_packet_info->ip_protocol = ip_protocol;
+	flow_p->simple_packet_info->flow_key.ip_source_address = ip_protocol->ip_source_address;
+	flow_p->simple_packet_info->flow_key.ip_destination_address = ip_protocol->ip_destination_address;
+		
+		
+	//printf("%d\n", ntohs(ip_protocol->ip_length));
 
 	//上层为TCP，则获取TCP首部
-		if (ip_protocol->ip_protocol == 6) {
-			struct tcp_header* tcp_protocol;
-			tcp_protocol = (struct tcp_header*)(packet + 14 + ip_header_len);
-			header_len = (ntohs(tcp_protocol->tcp_headerlen_flag) >> 12) * 4 + 14;
-			header_len += ip_header_len;
-			flow_p->simple_packet_info->header_len = header_len;
-			//cout << header_len << "\n";
-			//if (header_len == 32) cout << header_len << "\n";
-			//cout << header_len << "\n";
-			u_short source_port;           /*源端口*/
-			u_short destination_port;   /*目的端口*/
-			source_port = ntohs(tcp_protocol->tcp_source_port);
-			destination_port = ntohs(tcp_protocol->tcp_destination_port);
-
-			flow_p->simple_packet_info->protocol = 6;
-			flow_p->simple_packet_info->tcp_protocol = tcp_protocol;
-			flow_p->simple_packet_info->udp_protocol = NULL;
-			flow_p->simple_packet_info->flow_key.tcp_source_port = source_port;
-			flow_p->simple_packet_info->flow_key.tcp_destination_port = destination_port;
-			if (raw == 1) {
-				out3 << "TCP," << ',' << source_port << ',' << destination_port << ',';
-			}
-		}
-		else { return ; }
-		if (raw == 1) out3 << pkthdr->len << ",\n";
-		flow_p->on_packet_received();
-	}
 		
+	struct tcp_header* tcp_protocol;
+	tcp_protocol = (struct tcp_header*)(packet + 14 + ip_header_len);
+	header_len = (ntohs(tcp_protocol->tcp_headerlen_flag) >> 12) * 4 + 14;
+	header_len += ip_header_len;
+	flow_p->simple_packet_info->header_len = header_len;
+			
+	u_short source_port;           /*源端口*/
+	u_short destination_port;   /*目的端口*/
+	source_port = ntohs(tcp_protocol->tcp_source_port);
+	destination_port = ntohs(tcp_protocol->tcp_destination_port);
+
+	flow_p->simple_packet_info->protocol = 6;
+	flow_p->simple_packet_info->tcp_protocol = tcp_protocol;
+	flow_p->simple_packet_info->udp_protocol = NULL;
+	flow_p->simple_packet_info->flow_key.tcp_source_port = source_port;
+	flow_p->simple_packet_info->flow_key.tcp_destination_port = destination_port;
+	if (raw == 1) {
+		out3 << "TCP," << ',' << source_port << ',' << destination_port << ',';
+	}
+
+	flow_p->on_packet_received();
 	delete flow_p->simple_packet_info;
 	
 }

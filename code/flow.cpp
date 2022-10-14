@@ -57,7 +57,7 @@ void flow::terminate()
 	
 	if (duration != 0) {
 		
-		if (ave_pkt_size < lenmax && throughput >= thpmin && pkt_count > cntmin && ave_pkt_size > lenmin && duration >= time_i * duramin) {
+		if (ave_pkt_size < lenmax && throughput >= thpmin && pkt_count > cntmin && ave_pkt_size > lenmin) {
 			
 			ff.valid = 1;
 			strcpy(ff.ipsrc, ipsrc.c_str());
@@ -125,36 +125,36 @@ void flow::feature_output(simple_packet_info &pkt, int protocol)
 
 
 	//进行TCP流分析——RTT，重传。重传部分不考虑乱序到达的情况，乱序的包会被识别为重传
-	if (protocol == 6)
-	{
-		//插入<下一序号，时间>对。计算rtt时，若反向的包的ack=某个包的下一序号值，则这两个包的时间差构成rtt
-		u_int32_t next_seq = ntohl(pkt.tcp_protocol->tcp_acknowledgement) + pkt.packet_len - pkt.header_len;
-		//如果当前包是长为0的SYN和ACK，则下一包的序号会+1
-		if(next_seq == ntohl(pkt.tcp_protocol->tcp_acknowledgement) && ((ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3))) next_seq = next_seq+1;
-		seq.insert(std::pair<u_int32_t, time_type>(next_seq, pkt.ts));
+	
+	
+	//插入<下一序号，时间>对。计算rtt时，若反向的包的ack=某个包的下一序号值，则这两个包的时间差构成rtt
+	u_int32_t next_seq = ntohl(pkt.tcp_protocol->tcp_acknowledgement) + pkt.packet_len - pkt.header_len;
+	//如果当前包是长为0的SYN和ACK，则下一包的序号会+1
+	if(next_seq == ntohl(pkt.tcp_protocol->tcp_acknowledgement) && ((ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3))) next_seq = next_seq+1;
+	seq.insert(std::pair<u_int32_t, time_type>(next_seq, pkt.ts));
 
-		//判断是否IP层载荷是否为0。不使用pkt.packet_len-pkt.headerlen是因为二层可能存在后缀，而headerlen无法统计后缀长度
-		if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 0) ack_no_payload++;
+	//判断是否IP层载荷是否为0。不使用pkt.packet_len-pkt.headerlen是因为二层可能存在后缀，而headerlen无法统计后缀长度
+	if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 0) ack_no_payload++;
 
-		//若当前包序号大于历史序号，则它不是重传包
-		if ((ntohl(pkt.tcp_protocol->tcp_acknowledgement) > max_seq)) max_seq = ntohl(pkt.tcp_protocol->tcp_acknowledgement);
+	//若当前包序号大于历史序号，则它不是重传包
+	if ((ntohl(pkt.tcp_protocol->tcp_acknowledgement) > max_seq)) max_seq = ntohl(pkt.tcp_protocol->tcp_acknowledgement);
 
-		else {
-			//0载荷情况下，若当前包序号等于历史最大序号，若它是FIN或SYN且它的序号和上个包的序号相同，则它是重传包。否则它是一个0载荷的ACK包，且不是重传包
-			if ((ntohl(pkt.tcp_protocol->tcp_acknowledgement) == max_seq)) {
-				if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 0 && last_flag > 0 && (ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3) == last_flag)
-				{
-					retrans++;
-				}
-			}
-			//若当前包序号小于历史最大序号，则它是重传包
-			else {
+	else {
+		//0载荷情况下，若当前包序号等于历史最大序号，若它是FIN或SYN且它的序号和上个包的序号相同，则它是重传包。否则它是一个0载荷的ACK包，且不是重传包
+		if ((ntohl(pkt.tcp_protocol->tcp_acknowledgement) == max_seq)) {
+			if (ntohs(pkt.ip_protocol->ip_length) - pkt.header_len + 14 == 0 && last_flag > 0 && (ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3) == last_flag)
+			{
 				retrans++;
-				
 			}
 		}
-		last_flag = (ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3);
+			//若当前包序号小于历史最大序号，则它是重传包
+		else {
+			retrans++;
+				
+		}
 	}
+	last_flag = (ntohs(pkt.tcp_protocol->tcp_headerlen_flag) & 3);
+	
 
 }
 
