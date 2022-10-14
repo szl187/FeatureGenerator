@@ -15,7 +15,7 @@ using std::string; using std::vector;
 flow_process * flow_p = new flow_process();
 int raw = 0, seg_decay = 0, lite = 0, segout = 0, j = 1, block = 0, v = 10, csv = 0,
 nortcp = 0, allowweakflow = 0, allflow = 0, onlyallflow = 0, Sort = 0, lenmin = 0,
-cntmin = 0, lenmax = 10000;
+cntmin = 0, lenmax = 1000000;
 
 double thpmin = 0, time_i = 10, d_num = 0.2, duramin = 0;
 string ipsrc = "", ipdst = "";
@@ -99,9 +99,7 @@ void getPacket(u_char * arg, const struct pcap_pkthdr * pkthdr, const u_char * p
 	flow_p->simple_packet_info->udp_protocol = NULL;
 	flow_p->simple_packet_info->flow_key.tcp_source_port = source_port;
 	flow_p->simple_packet_info->flow_key.tcp_destination_port = destination_port;
-	if (raw == 1) {
-		out3 << "TCP," << ',' << source_port << ',' << destination_port << ',';
-	}
+
 
 	flow_p->on_packet_received();
 	delete flow_p->simple_packet_info;
