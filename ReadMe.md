@@ -27,11 +27,12 @@ WinPcap安装包获取路径：[WinPcap](https://www.winpcap.org/install/default
      
 输入类型参数说明：
 
-输入类型参数           说明                   备注 
+| 输入类型参数 |          说明     |              备注 |
+|  ----  | ----  |
 
-  -file     pcap或pcapng文件的绝对路径  
+|  -file   |  pcap或pcapng文件的绝对路径  |  |
 
-   -folder         文件夹绝对路径         不读取子文件夹 
+|   -folder    |     文件夹绝对路径      |   不读取子文件夹 |
    
 可选参数             说明                  类型
    -i           设置单位时间长度          double(>0)
