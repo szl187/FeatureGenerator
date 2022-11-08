@@ -15,7 +15,7 @@ using std::string; using std::vector;
 flow_process * flow_p = new flow_process();
 int raw = 0, seg_decay = 0, lite = 0, segout = 0, j = 1, block = 0, v = 10, csv = 0,
 nortcp = 0, allowweakflow = 0, allflow = 0, onlyallflow = 0, Sort = 0, lenmin = 0,
-cntmin = 0, lenmax = 10000;
+cntmin = 0, lenmax = 100000;
 
 double thpmin = 0, time_i = 10, d_num = 0.2, duramin = 0;
 string ipsrc = "", ipdst = "";
