@@ -58,8 +58,6 @@ void flow::terminate(int overtime)
 	ave_pkt_size = double(packet_size_ls) / pkt_count;
 	app_ave_pkt_size = ave_pkt_size - double(header_len_ls) / pkt_count;
 	throughput = pkt_count / duration;
-	if (rtt_count > 0) ave_rtt = rtt_ls / rtt_count;
-	else ave_rtt = 0;
 	if (pkt_count > 1)ave_interval = duration / double(pkt_count - 1);
 	else ave_interval = duration;
 	bandwith = ave_pkt_size * throughput;
