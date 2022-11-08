@@ -68,7 +68,7 @@ void flow::terminate(int overtime)
 	
 	if (duration != 0) {
 	
-		if (ave_pkt_size < lenmax && throughput >= thpmin && pkt_count > cntmin && ave_pkt_size > lenmin && duration >= time_i * duramin) {
+		if (ave_pkt_size < lenmax && throughput >= thpmin && pkt_count > cntmin && ave_pkt_size > lenmin) {
 			
 			ff.valid = 1;
 			strcpy(ff.ipsrc, ipsrc.c_str());
