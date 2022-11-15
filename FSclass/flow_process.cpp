@@ -77,12 +77,12 @@ flow_process::~flow_process() {
 		}
 		int cntshare = 0, cntvideo = 0;
 		for (auto i = flow_features.begin(); i <= flow_features.begin()+1 && (*i).thp>0 ; i++) {
-			//std::cout <<"cnt1000:"<<cnt1000<<" ||"<<std::setw(5)<< (*i).portsrc << "->"<<std::setw(5) << (*i).portdst << " len1000:" << std::setw(7)<<(int)(*i).avelen1000up << " len:" <<std::setw(4)<< (int)(*i).pktlen << " thp:" << (*i).thp << std::endl;
+		//	std::cout <<"cnt1000:"<<cnt1000<<" ||"<<std::setw(5)<< (*i).portsrc << "->"<<std::setw(5) << (*i).portdst << " len1000:" << std::setw(7)<<(int)(*i).avelen1000up << " len:" <<std::setw(4)<< (int)(*i).pktlen << " thp:" << (*i).thp << std::endl;
 			
 			
 			if((*i).avelen1000up >1200 ) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
-			else if ((*i).avelen1000up > 1000 && (*i).pktlen > 200) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
-			else if ((*i).pktlen > 120) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
+			else if ((*i).avelen1000up > 1000 && (*i).pktlen > 150) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+			else if ((*i).pktlen > 130) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
 
 
 		}
