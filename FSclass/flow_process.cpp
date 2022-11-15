@@ -82,13 +82,11 @@ flow_process::~flow_process() {
 			
 			if((*i).avelen1000up >1200 ) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  share\n";
 			else if ((*i).avelen1000up > 1000 && (*i).pktlen > 200) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  video\n";
+			else if ((*i).pktlen > 120) std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
 
 
 		}
-		if (cnt1000 == 0) {
-			auto i = flow_features.begin();
-			std::cout << (*i).ipsrc << "->" << (*i).ipdst << "  " << (*i).portsrc << "->" << (*i).portdst << "  voice\n";
-		}
+		
 		
 
 				

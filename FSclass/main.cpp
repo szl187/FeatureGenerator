@@ -154,8 +154,8 @@ int main(int argc, char* argv[])
 	
 	pcap_t * device;
 
-	out1.open(realPath+"/class.csv");
-	out1 << "file name,portsrc,portdst,len,bw.thp,26,60,74,54,78,82\n";
+	//out1.open(realPath+"/class.csv");
+	//out1 << "file name,portsrc,portdst,len,bw.thp,26,60,74,54,78,82\n";
 	for (unsigned int i=0;i<files.size();++i){
 		
 		//一次读取候选文件并分别进行处理
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
 
 
 		cout << "output:" << files[i] << endl;
-		out1  << files[i] << ",";
+		//out1  << files[i] << ",";
 		device = pcap_open_offline(files[i].c_str(),errBuf);
 		if (device == NULL) cout << errBuf << endl;
 		else {
@@ -179,7 +179,7 @@ int main(int argc, char* argv[])
 		}
 		
 	}
-	out1.close();
+	//out1.close();
 	finish = clock();
 	dura = (double)(finish - start) / CLOCKS_PER_SEC;
 	printf("%f seconds\n", dura);
