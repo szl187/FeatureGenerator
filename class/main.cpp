@@ -17,7 +17,7 @@ int raw = 0, seg_decay = 0, lite = 0, segout = 0, j = 1, block = 0, v = 10, csv 
 nortcp = 0, allowweakflow = 0, allflow = 0, onlyallflow=0,  Sort = 0, rtinfo = 0, lenmin = 0, 
 cntmin = 10, portinfo = 0, lenmax = 10000, droplast = 0, decay=0, vari=0,app=0;
 
-double thpmin = 0, time_i = 10000, d_num=0.2, duramin=0;
+double thpmin = 0, time_i = 100000, d_num=0.2, duramin=0;
 string ipsrc = "", ipdst = "";
 short portsrc = -1, portdst = -1;
 
@@ -136,7 +136,6 @@ int main(int argc, char* argv[])
 	outputfile1name = (char *)malloc(80);
 
 	if (strcmp(argv[1] , "-folder")==0){
-	  // 若文件夹中文件数少于2，则失效
 		realPath = argv[2];
 		getAllFiles(realPath,files);
 	}
@@ -170,16 +169,10 @@ int main(int argc, char* argv[])
 	
 	pcap_t * device;
 
-	//out1.open(realPath+"/class.csv");
-	//out1 << "file name,portsrc,portdst,len,bw.thp,26,60,74,54,78,82\n";
 	for (unsigned int i=0;i<files.size();++i){
 		
 		//一次读取候选文件并分别进行处理
-		
-
-
 		cout << "output:" << files[i] << endl;
-		//out1  << files[i] << ",";
 		device = pcap_open_offline(files[i].c_str(),errBuf);
 		if (device == NULL) cout << errBuf << endl;
 		else {
@@ -195,9 +188,7 @@ int main(int argc, char* argv[])
 		}
 		
 	}
-	//out1.close();
 	finish = clock();
 	dura = (double)(finish - start) / CLOCKS_PER_SEC;
-	printf("%f seconds\n", dura);
 	return 0;
 }
